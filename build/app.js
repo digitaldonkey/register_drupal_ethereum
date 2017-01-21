@@ -42728,7 +42728,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       }
     ],
     "unlinked_binary": "0x606060405260008054600160a060020a0319163317905560f7806100236000396000f3606060405260e060020a60003504630900f01081146038578063445df0ac1460b05780638da5cb5b1460b8578063fdacd5761460c9575b005b60366004356000805433600160a060020a039081169116141560ac576001547ffdacd5760000000000000000000000000000000000000000000000000000000060609081526064919091528291600160a060020a0383169163fdacd5769160849160248183876161da5a03f1156002575050505b5050565b60ed60015481565b60ed600054600160a060020a031681565b603660043560005433600160a060020a039081169116141560ea5760018190555b50565b6060908152602090f3",
-    "updated_at": 1484662626819,
+    "updated_at": 1484927614632,
     "address": "0xea8efc0d5efc1bea2015443694764f3ea163b939",
     "links": {},
     "events": {}
@@ -43221,11 +43221,11 @@ var SolidityEvent = require("web3/lib/web3/event.js");
           },
           {
             "name": "hash",
-            "type": "string"
+            "type": "bytes32"
           },
           {
             "name": "error",
-            "type": "string"
+            "type": "int256"
           }
         ],
         "name": "accountCreated",
@@ -43234,15 +43234,20 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "type": "function"
       },
       {
-        "constant": false,
+        "constant": true,
         "inputs": [
           {
             "name": "drupalUserHash",
-            "type": "string"
+            "type": "bytes32"
           }
         ],
-        "name": "newUser",
-        "outputs": [],
+        "name": "validateUserByHash",
+        "outputs": [
+          {
+            "name": "result",
+            "type": "address"
+          }
+        ],
         "payable": false,
         "type": "function"
       },
@@ -43276,24 +43281,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "type": "function"
       },
       {
-        "constant": true,
-        "inputs": [
-          {
-            "name": "drupalUserHash",
-            "type": "string"
-          }
-        ],
-        "name": "validateUserByHash",
-        "outputs": [
-          {
-            "name": "result",
-            "type": "address"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
         "constant": false,
         "inputs": [
           {
@@ -43302,6 +43289,19 @@ var SolidityEvent = require("web3/lib/web3/event.js");
           }
         ],
         "name": "adminSetRegistrationDisabled",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "drupalUserHash",
+            "type": "bytes32"
+          }
+        ],
+        "name": "newUser",
         "outputs": [],
         "payable": false,
         "type": "function"
@@ -43322,20 +43322,20 @@ var SolidityEvent = require("web3/lib/web3/event.js");
           {
             "indexed": true,
             "name": "hash",
-            "type": "string"
+            "type": "bytes32"
           },
           {
             "indexed": false,
             "name": "error",
-            "type": "string"
+            "type": "int256"
           }
         ],
         "name": "AccountCreatedEvent",
         "type": "event"
       }
     ],
-    "unlinked_binary": "0x606060405234610000575b60018054600160a060020a033316600160a060020a031991821681179092556002805460a060020a60ff021992169092171690555b5b6107bd8061004f6000396000f300606060405236156100675763ffffffff60e060020a60003504166310c088ff811461006c5780631eed119214610108578063345e34161461015d5780633af41dc21461016c57806349f0c90d1461017b5780636c1fda1d146101965780639b6d86d614610205575b610000565b346100005760408051602060046024803582810135601f8101859004850286018501909652858552610106958335600160a060020a0316959394604494939290920191819084018382808284375050604080516020601f89358b0180359182018390048302840183019094528083529799988101979196509182019450925082915084018382808284375094965061021995505050505050565b005b3461000057610106600480803590602001908201803590602001908080601f0160208091040260200160405190810160405280939291908181526020018383808284375094965061032295505050505050565b005b346100005761010661061e565b005b346100005761010661066e565b005b3461000057610106600160a060020a0360043516610696565b005b34610000576101e9600480803590602001908201803590602001908080601f016020809104026020016040519081016040528093929190818152602001838380828437509496506106da95505050505050565b60408051600160a060020a039092168252519081900360200190f35b3461000057610106600435151561074d565b005b816040518082805190602001908083835b602083106102495780518252601f19909201916020918201910161022a565b51815160209384036101000a6000190180199092169116179052604080519290940182900382208183528751838301528751909650600160a060020a038a1695507f66784de58cef55d034bff4f1349c453510982eab408e47a715bdf869534aa56d948894508392908301919085019080838382156102e3575b8051825260208311156102e357601f1990920191602091820191016102c3565b505050905090810190601f16801561030f5780820380516001836020036101000a031916815260200191505b509250505060405180910390a35b505050565b33600160a060020a03166000826040518082805190602001908083835b6020831061035e5780518252601f19909201916020918201910161033f565b51815160209384036101000a6000190180199092169116179052920194855250604051938490030190922054600160a060020a0316929092141591506103e69050576103e13382604060405190810160405280600281526020017f2d31000000000000000000000000000000000000000000000000000000000000815250610219565b610616565b60006000826040518082805190602001908083835b6020831061041a5780518252601f1990920191602091820191016103fb565b51815160209384036101000a6000190180199092169116179052920194855250604051938490030190922054600160a060020a0316929092111591506104a29050576103e13382604060405190810160405280600281526020017f2d32000000000000000000000000000000000000000000000000000000000000815250610219565b610616565b8051604090106104f2576103e13382604060405190810160405280600281526020017f2d33000000000000000000000000000000000000000000000000000000000000815250610219565b610616565b60025460a060020a900460ff161561054a576103e13382604060405190810160405280600281526020017f2d34000000000000000000000000000000000000000000000000000000000000815250610219565b610616565b336000826040518082805190602001908083835b6020831061057d5780518252601f19909201916020918201910161055e565b51815160209384036101000a6000190180199092169116179052920194855250604080519485900382018520805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0397909716969096179095558385019094525050600181527f3000000000000000000000000000000000000000000000000000000000000000918101919091526106169033908390610219565b5b5b5b5b5b50565b60015433600160a060020a039081169116141561066a57600154604051600160a060020a039182169130163180156108fc02916000818181858888f19350505050151561066a57610000565b5b5b565b60015433600160a060020a039081169116141561066a57600154600160a060020a0316ff5b5b565b60015433600160a060020a0390811691161415610616576002805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b60006000826040518082805190602001908083835b6020831061070e5780518252601f1990920191602091820191016106ef565b51815160209384036101000a6000190180199092169116179052920194855250604051938490030190922054600160a060020a0316925050505b919050565b60015433600160a060020a0390811691161415610616576002805474ff0000000000000000000000000000000000000000191660a060020a831515021790555b5b505600a165627a7a723058201e45c5d20af64887918320d6f611d4a249c0f8c42625dddf670204dd07e169960029",
-    "updated_at": 1484664524114,
+    "unlinked_binary": "0x606060405234610000575b60018054600160a060020a033316600160a060020a031991821681179092556002805460a060020a60ff021992169092171690555b5b6103848061004f6000396000f300606060405236156100675763ffffffff60e060020a600035041663111b72c3811461006c5780632573ce271461008d578063345e3416146100b95780633af41dc2146100c857806349f0c90d146100d75780639b6d86d6146100f2578063f845862f14610106575b610000565b346100005761008b600160a060020a0360043516602435604435610118565b005b346100005761009d60043561015e565b60408051600160a060020a039092168252519081900360200190f35b346100005761008b61017c565b005b346100005761008b6101cc565b005b346100005761008b600160a060020a03600435166101f4565b005b346100005761008b6004351515610238565b005b346100005761008b60043561027c565b005b6040805182815290518391600160a060020a038616917fdd4adf6c5ef0c5a78200bcebce519e97649524d2c8dc89cf0f8baa99cc39bb539181900360200190a35b505050565b600081815260208190526040902054600160a060020a03165b919050565b60015433600160a060020a03908116911614156101c857600154604051600160a060020a039182169130163180156108fc02916000818181858888f1935050505015156101c857610000565b5b5b565b60015433600160a060020a03908116911614156101c857600154600160a060020a0316ff5b5b565b60015433600160a060020a0390811691161415610234576002805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0383161790555b5b50565b60015433600160a060020a0390811691161415610234576002805474ff0000000000000000000000000000000000000000191660a060020a831515021790555b5b50565b60008181526020819052604090205433600160a060020a03908116911614156102b0576102ab33826004610118565b610234565b600081815260208190526040812054600160a060020a031611156102df576102ab33826003610118565b610234565b6102e9565b610234565b60025460a060020a900460ff161561030c576102ab33826001610118565b610234565b6000818152602081905260408120805473ffffffffffffffffffffffffffffffffffffffff191633600160a060020a03811691909117909155610234918390610118565b5b5b5b5b5b505600a165627a7a723058201df0bb00a4272634bd73b8eb76b45cdbb8d9fa930922cdf8f408991757d0d35d0029",
+    "updated_at": 1484929176295,
     "links": {},
     "address": "0x87fa200c97bc28573fa44bfa5f25f7270017bb08",
     "events": {
@@ -43356,6 +43356,50 @@ var SolidityEvent = require("web3/lib/web3/event.js");
             "indexed": false,
             "name": "error",
             "type": "string"
+          }
+        ],
+        "name": "AccountCreatedEvent",
+        "type": "event"
+      },
+      "0xdf2d2ae0a838f854d691511c3a4fe77ff14d4be8c09532632a3739b99d9299a3": {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "name": "hash",
+            "type": "bytes32"
+          },
+          {
+            "indexed": false,
+            "name": "error",
+            "type": "string"
+          }
+        ],
+        "name": "AccountCreatedEvent",
+        "type": "event"
+      },
+      "0xdd4adf6c5ef0c5a78200bcebce519e97649524d2c8dc89cf0f8baa99cc39bb53": {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "name": "hash",
+            "type": "bytes32"
+          },
+          {
+            "indexed": false,
+            "name": "error",
+            "type": "int256"
           }
         ],
         "name": "AccountCreatedEvent",
@@ -43528,7 +43572,7 @@ window.addEventListener('load', function() {
 
                                                                 
 
-  [RegisterDrupal,Migrations].forEach(function(contract) {         
+  [Migrations,RegisterDrupal].forEach(function(contract) {         
 
     contract.setProvider(window.web3.currentProvider);          
 
@@ -43544,16 +43588,16 @@ var accounts;
 var account;
 var accountCreatedEvent;
 var registerDrupal;
-var events;
 
 
+/* HELPER to update DOM */
 function setStatus(message) {
   var status = document.getElementById("status");
   status.innerHTML = message;
 };
 
 
-
+/* HELPER to update DOM */
 function generateHash() {
   var hashInput = document.getElementById("hash");
       hashInput.value = _makeid();
@@ -43564,26 +43608,18 @@ function generateHash() {
 
 function registerAccount() {
 
+  // HASH - will be provided by the WebApp to register to. E.g: Drupal.
   var hashInput = document.getElementById("hash").value;
   console.log(hashInput, 'hashInput');
 
+
   registerDrupal.newUser(hashInput, {from: account}).then(function(tx) {
-
     console.log(tx , 'tx');
-
     return tx;
   })
-  .then(function(tx) {
-    // On a sucessful call success must be 0.
-
-    console.log(tx , 'tx2');
-    return web3.eth.getTransactionReceipt(tx);
-  })
-  .then(function(recipt){
-      console.log(recipt , 'recipt');
-    }
-  ).catch(function(e) {
-
+  .then(function(tx){
+      console.log(tx , 'tx');
+  }).catch(function(e) {
     console.log(e);
     setStatus("Error getting balance; see log.");
   });
@@ -43611,10 +43647,9 @@ function validateAccount(hash) {
 
 
 
-function _makeid()
-{
+function _makeid() {
     var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var possible = "ABCDEF0123456789";
 
     for( var i=0; i < 32; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -43622,57 +43657,36 @@ function _makeid()
     return text;
 }
 
-
 window.onload = function() {
   web3.eth.getAccounts(function(err, accs) {
+
+    // Account validation.
     if (err != null) {
       alert("There was an error fetching your accounts.");
       return;
     }
-
     if (accs.length == 0) {
       alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
       return;
     }
-
     accounts = accs;
     account = accounts[0];
 
+    // The RegisterDrupal Smart Contract.
     registerDrupal = RegisterDrupal.deployed();
 
-    console.log(registerDrupal, 'registerDrupal');
-    console.log(registerDrupal.address, 'registerDrupal.address');
+    console.log(registerDrupal, 'RegisterDrupal.deployed()');
+    console.log('registerDrupal.address', registerDrupal.address);
 
     // var ClientReceipt = web3.eth.contract(registerDrupal.abi);
     // var clientReceipt = ClientReceipt.at(registerDrupal.address);
 
+    // Event listener for account creation.
     accountCreatedEvent = RegisterDrupal.at(registerDrupal.address).AccountCreatedEvent();
-
-
-    events = RegisterDrupal.at(registerDrupal.address).allEvents();
-
-    // watch for changes
-    events.watch(function(error, event){
-
-      console.log('WATCH ALL triggered.');
-
-    var SolidityCoder = require("web3/lib/solidity/coder.js");
-    console.log(SolidityCoder, 'SolidityCoder');
-
-
-      if (!error)
-        console.log(event);
-        console.log(event.type);
-    });
-
-
-//     console.log(accountCreatedEvent, 'accountCreatedEvent');
-
     accountCreatedEvent.watch(function(error, result){
 
 
-      console.log('accountCreatedEvent triggered.');
-      console.log(event.type);
+      console.log(result, 'accountCreatedEvent triggered.');
 
       // result will contain various information
       // including the argumets given to the Deposit
@@ -43689,4 +43703,11 @@ window.onload = function() {
     generateHash();
   });
 }
+
+// String.prototype.md5 = function(){
+// function L(k,d){return(k<<d)|(k>>>(32-d))}function K(G,k){var I,d,F,H,x;F=(G&2147483648);H=(k&2147483648);I=(G&1073741824);d=(k&1073741824);x=(G&1073741823)+(k&1073741823);if(I&d){return(x^2147483648^F^H)}if(I|d){if(x&1073741824){return(x^3221225472^F^H)}else{return(x^1073741824^F^H)}}else{return(x^F^H)}}function r(d,F,k){return(d&F)|((~d)&k)}function q(d,F,k){return(d&k)|(F&(~k))}function p(d,F,k){return(d^F^k)}function n(d,F,k){return(F^(d|(~k)))}function u(G,F,aa,Z,k,H,I){G=K(G,K(K(r(F,aa,Z),k),I));return K(L(G,H),F)}function f(G,F,aa,Z,k,H,I){G=K(G,K(K(q(F,aa,Z),k),I));return K(L(G,H),F)}function D(G,F,aa,Z,k,H,I){G=K(G,K(K(p(F,aa,Z),k),I));return K(L(G,H),F)}function t(G,F,aa,Z,k,H,I){G=K(G,K(K(n(F,aa,Z),k),I));return K(L(G,H),F)}function e(G){var Z;var F=G.length;var x=F+8;var k=(x-(x%64))/64;var I=(k+1)*16;var aa=Array(I-1);var d=0;var H=0;while(H<F){Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=(aa[Z]| (G.charCodeAt(H)<<d));H++}Z=(H-(H%4))/4;d=(H%4)*8;aa[Z]=aa[Z]|(128<<d);aa[I-2]=F<<3;aa[I-1]=F>>>29;return aa}function B(x){var k="",F="",G,d;for(d=0;d<=3;d++){G=(x>>>(d*8))&255;F="0"+G.toString(16);k=k+F.substr(F.length-2,2)}return k}function J(k){k=k.replace(/rn/g,"n");var d="";for(var F=0;F<k.length;F++){var x=k.charCodeAt(F);if(x<128){d+=String.fromCharCode(x)}else{if((x>127)&&(x<2048)){d+=String.fromCharCode((x>>6)|192);d+=String.fromCharCode((x&63)|128)}else{d+=String.fromCharCode((x>>12)|224);d+=String.fromCharCode(((x>>6)&63)|128);d+=String.fromCharCode((x&63)|128)}}}return d}var C=Array();var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;s=J(this);C=e(this);Y=1732584193;X=4023233417;W=2562383102;V=271733878;for(P=0;P<C.length;P+=16){h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g)}var i=B(Y)+B(X)+B(W)+B(V);
+// return i.toLowerCase()
+// }
+
+
 

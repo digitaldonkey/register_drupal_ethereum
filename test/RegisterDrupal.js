@@ -1,9 +1,17 @@
-contract('RegisterDrupal', function(accounts) {
-  // it("should put 10000 MetaCoin in the first account", function() {
-  //   var meta = RegisterDrupal.deployed();
+var testhash = '8490BBB2D0D369107F6F5CF6B34BFC4D';
 
-  //   return meta.getBalance.call(accounts[0]).then(function(balance) {
-  //     assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
-  //   });
-  // });
+contract('RegisterDrupal', function(accounts) {
+
+  it("REGISTER A USER", function() {
+    var meta = RegisterDrupal.deployed();
+
+    return meta.newUser(testhash, {from: accounts[0]}).then(function(tx) {
+
+      meta.validateUserByHash(testhash, {from: accounts[0]}).then(function(address) {
+        assert.equal(address, accounts[0]);
+      });
+
+    });
+
+  });
 });

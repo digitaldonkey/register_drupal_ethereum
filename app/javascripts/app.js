@@ -47,7 +47,8 @@ function validateAccount(hash) {
     }
     console.log(hash, 'hash @ validateAccount');
 
-  registerDrupal.validateUserByHash(hash, {from: account}).then(function(address) {
+  registerDrupal.validateUserByHash(hash, {from: account})
+  .then(function(address) {
     // On a sucessful cal success must be 0.
     console.log(address , 'address@validateUserByHash');
 
@@ -89,8 +90,9 @@ window.onload = function() {
     // The RegisterDrupal Smart Contract.
     registerDrupal = RegisterDrupal.deployed();
 
+    var address = document.getElementById("contract-address");
+    address.innerHTML = registerDrupal.address;
     console.log(registerDrupal, 'RegisterDrupal.deployed()');
-    console.log('registerDrupal.address', registerDrupal.address);
 
     // var ClientReceipt = web3.eth.contract(registerDrupal.abi);
     // var clientReceipt = ClientReceipt.at(registerDrupal.address);

@@ -6,6 +6,7 @@ This is a Ethereum Smart Contract for hash verification with PHP based CMS Drupa
 For development see
 http://truffleframework.com/
 
+**Requires truffle 3.X**
 
 ## The Smart Contract
 contains a simple registry mapping a hash to a Ethereum Address
@@ -13,7 +14,7 @@ A CMS like Drupal generates a hash for their users to approve an blockchain acco
 
 The User is required to sign the "Registry transaction" with his blockchain key.
 The signing process can take place in web browsers or on mobile devices.
-So the user needs a web3 bases transaction signer like the Metamask Chrome plug-in. 
+So the user needs a web3 bases transaction signer like the Metamask Chrome plug-in.
 
 ```
 contracts/RegisterDrupal.sol

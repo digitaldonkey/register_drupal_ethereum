@@ -2,6 +2,7 @@ var accounts;
 var account;
 var accountCreatedEvent;
 var registerDrupal;
+var registerDrupalDeployed;
 
 
 /* HELPER to update DOM */
@@ -27,7 +28,7 @@ function registerAccount() {
   console.log(hashInput, 'hashInput');
 
 
-  registerDrupal.newUser(hashInput, {from: account}).then(function(tx) {
+  registerDrupalDeployed.newUser(hashInput, {from: account}).then(function(tx) {
     console.log(tx , 'tx');
     return tx;
   })
@@ -47,7 +48,7 @@ function validateAccount(hash) {
     }
     console.log(hash, 'hash @ validateAccount');
 
-  registerDrupal.validateUserByHash(hash, {from: account})
+  registerDrupalDeployed.validateUserByHash(hash, {from: account})
   .then(function(address) {
     // On a sucessful cal success must be 0.
     console.log(address , 'address@validateUserByHash');
@@ -73,6 +74,8 @@ function _makeid() {
 }
 
 window.onload = function() {
+  var address = document.getElementById("contract-address");
+
   web3.eth.getAccounts(function(err, accs) {
 
     // Account validation.
@@ -87,35 +90,35 @@ window.onload = function() {
     accounts = accs;
     account = accounts[0];
 
+      console.log(web3, 'web3');
+
     // The RegisterDrupal Smart Contract.
-    registerDrupal = RegisterDrupal.deployed();
+    RegisterDrupal.deployed().then(function(instance) {
+      console.log(instance, 'RegisterDrupal');
+      console.log(instance.address, 'RegisterDrupal.address');
+      registerDrupalDeployed = instance;
+      address.innerHTML = registerDrupalDeployed.address;
 
-    var address = document.getElementById("contract-address");
-    address.innerHTML = registerDrupal.address;
-    console.log(registerDrupal, 'RegisterDrupal.deployed()');
+      // Event listener for account creation.
+      return registerDrupalDeployed.AccountCreatedEvent();
 
-    // var ClientReceipt = web3.eth.contract(registerDrupal.abi);
-    // var clientReceipt = ClientReceipt.at(registerDrupal.address);
+    }).then(function(result) {
 
-    // Event listener for account creation.
-    accountCreatedEvent = RegisterDrupal.at(registerDrupal.address).AccountCreatedEvent();
-    accountCreatedEvent.watch(function(error, result){
+        accountCreatedEvent = result;
 
-
-      console.log(result, 'accountCreatedEvent triggered.');
-
-      // result will contain various information
-      // including the argumets given to the Deposit
-      // call.
-      if (!error) {
-        console.log(result);
-      }
-      else {
-        console.log(error);
-      }
-
-    });
-
+        accountCreatedEvent.watch(function(error, result){
+          console.log(result, 'accountCreatedEvent triggered.');
+          // result will contain various information
+          // including the argumets given to the Deposit
+          // call.
+          if (!error) {
+            console.log(result);
+          }
+          else {
+            console.log(error);
+          }
+        });
+      });
     generateHash();
   });
 }

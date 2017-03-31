@@ -50,6 +50,10 @@ contract RegisterDrupal {
       return _accounts[drupalUserHash];
   }
 
+  function contractExists () constant returns (bool result){
+    return true;
+  }
+
   // Administrative below
   function RegisterDrupal() {
     _registryAdmin = msg.sender;

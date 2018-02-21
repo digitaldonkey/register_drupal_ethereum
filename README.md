@@ -1,42 +1,42 @@
 # Register Drupal - Example Ethereum account verification
 
-Note:
-This is a Ethereum Smart Contract for hash verification with PHP based CMS Drupal.
+This repository contains a very simple registry smart contract which is used in the Drupal Ethereum module. 
 
-For development see
-http://truffleframework.com/
+It allows the PHP Application (Drupal) to verify a visitors Blockchain address. 
 
-**Requires truffle 4.X**
+**Summing up the flow**
+
+* Drupal creates a 32 bit hash
+* The visitor "submits" this hash to the registry (this contract) using Metamask as a transaction signer `newUser(bytes32 drupalUserHash)`. Drupal will also save the Ethereum address the user **claims to own**.
+* Drupal can now call `validateUserByHash (bytes32 drupalUserHash)`. If the If the hash has been submitted with the users claimed address Drupal has a **proof that the user actually owns** the private key to sign this transaction. 
+
+You might easily turn this into a simple paywall contract. 
+
+**Development with truffle**
+
+Requires truffle 4.X
+
+Next to this contract there is a simple app to interact with the contract or modify it. 
+
+See *quickstart* below or http://truffleframework.com 
 
 ## The Smart Contract
 contains a simple registry mapping a hash to a Ethereum Address
 A CMS like Drupal generates a hash for their users to approve an blockchain account.
 
-The User is required to sign the "Registry transaction" with his blockchain key.
-The signing process can take place in web browsers or on mobile devices.
-So the user needs a web3 bases transaction signer like the Metamask Chrome/Firefox plug-in.
+The user is required to sign the "Registry transaction" with his blockchain key. The signing process can take place in web browsers or on mobile devices.
+
+To sign a transaction in the browser you need a _transaction signer_ like the [Metamask](https://metamask.io/) Chrome/Firefox plug-in.
 
 ```
 contracts/RegisterDrupal.sol
 ```
-The Contract language is Solidity
-Learn more: https://solidity.readthedocs.io/en/develop/
+The Contract language is [Solidity](https://solidity.readthedocs.io/en/develop/).
+
+Solidity has a great tool you may use to develop and deploy out of the browser called [REMIX](http://remix.ethereum.org). You will also need Metamask to do so. 
 
 
-You may
-
-* use truffle and ganache to start in browser development.
-* change and deploy from online in the Browser using the Online Solidity compiler
-* deploy to  Ganache, Ethereum "Ropsten" test net or even to Ethereum main net
-
-http://remix.ethereum.org
-
-In combination with the amazing Metamask Browser plug-in Metamask
-
-https://metamask.io/
-
-
-## Quickstart
+## Quickstart with Truffle
 
 Install NPM
 https://docs.npmjs.com/getting-started/installing-node
@@ -96,3 +96,42 @@ Saving successful migration to network...
   ... 0xf36163615f41ef7ed8f4a8f192149a0bf633fe1a2398ce001bf44c43dc7bdda0
 Saving artifacts...
 ``` 
+
+Now keep the truffle console open (it's your local blockchain) and start the app 
+
+```
+npm run dev
+
+> truffle-init-webpack@0.0.2 dev /Users/tho/htdocs/register_drupal_ethereum/register_drupal_update
+> webpack-dev-server
+
+Project is running at http://localhost:8081/
+webpack output is served from /
+Hash: f36739e2f122fef70704
+Version: webpack 2.7.0
+Time: 1466ms
+                   Asset       Size  Chunks                    Chunk Names
+                  app.js    1.67 MB       0  [emitted]  [big]  main
+              index.html    1.16 kB          [emitted]
+                 app.css  595 bytes          [emitted]
+images/drupal-8-logo.svg    1.24 kB          [emitted]
+chunk    {0} app.js (main) 1.65 MB [entry] [rendered]
+   [71] ./app/javascripts/app.js 4.86 kB {0} [built]
+   [72] (webpack)-dev-server/client?http://localhost:8081 7.91 kB {0} [built]
+   [73] ./build/contracts/RegisterDrupal.json 51.3 kB {0} [built]
+  [109] ./~/loglevel/lib/loglevel.js 7.86 kB {0} [built]
+  [117] ./~/strip-ansi/index.js 161 bytes {0} [built]
+  [154] ./~/truffle-contract-schema/index.js 5.4 kB {0} [built]
+  [159] ./~/truffle-contract/index.js 2.64 kB {0} [built]
+  [193] ./~/url/url.js 23.3 kB {0} [built]
+  [194] ./~/url/util.js 314 bytes {0} [built]
+  [195] ./~/web3/index.js 193 bytes {0} [built]
+  [229] (webpack)-dev-server/client/overlay.js 3.67 kB {0} [built]
+  [230] (webpack)-dev-server/client/socket.js 1.08 kB {0} [built]
+  [231] (webpack)/hot nonrecursive ^\.\/log$ 160 bytes {0} [built]
+  [232] (webpack)/hot/emitter.js 77 bytes {0} [built]
+  [233] multi (webpack)-dev-server/client?http://localhost:8081 ./app/javascripts/app.js 40 bytes {0} [built]
+     + 219 hidden modules
+webpack: Compiled successfully.
+```
+This will start a local webserver at [http://localhost:8081](http://localhost:8081).

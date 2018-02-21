@@ -43,6 +43,13 @@ h3 {
   color: black;
 }
 
+.error {
+  color: red;
+}
+.success {
+  color: green;
+}
+
 #balance {
   color: black;
 }

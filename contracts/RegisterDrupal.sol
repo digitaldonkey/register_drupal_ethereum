@@ -1,4 +1,4 @@
-pragma solidity ^0.4.8;
+pragma solidity ^0.4.19;
 
 contract RegisterDrupal {
 
@@ -16,7 +16,7 @@ contract RegisterDrupal {
   // Event allowing listening to newly signed Accounts (?)
   event AccountCreatedEvent (address indexed from, bytes32 indexed hash, int error);
 
-  function accountCreated(address from, bytes32 hash, int error) {
+  function accountCreated(address from, bytes32 hash, int error) public {
     AccountCreatedEvent(from, hash, error);
   }
 
@@ -46,21 +46,22 @@ contract RegisterDrupal {
   }
 
   // Validate Account
-  function validateUserByHash (bytes32 drupalUserHash) constant returns (address result){
+  function validateUserByHash (bytes32 drupalUserHash) public constant returns (address result) {
       return _accounts[drupalUserHash];
   }
 
-  function contractExists () constant returns (bool result){
+  function contractExists () public pure returns (bool result){
     return true;
   }
 
   // Administrative below
-  function RegisterDrupal() {
+  function RegisterDrupal() public {
     _registryAdmin = msg.sender;
     _accountAdmin = msg.sender; // can be changed later
     _registrationDisabled = false;
   }
-  function adminSetRegistrationDisabled(bool registrationDisabled) {
+
+  function adminSetRegistrationDisabled(bool registrationDisabled) public {
     // currently, the code of the registry can not be updated once it is
     // deployed. if a newer version of the registry is available, account
     // registration can be disabled
@@ -68,20 +69,22 @@ contract RegisterDrupal {
       _registrationDisabled = registrationDisabled;
     }
   }
-  function adminSetAccountAdministrator(address accountAdmin) {
+
+  function adminSetAccountAdministrator(address accountAdmin) public {
     if (msg.sender == _registryAdmin) {
       _accountAdmin = accountAdmin;
     }
   }
-  function adminRetrieveDonations() {
+
+  function adminRetrieveDonations() public {
     if (msg.sender == _registryAdmin) {
-      if (!_registryAdmin.send(this.balance))
-        throw;
+      _registryAdmin.transfer(this.balance);
     }
   }
-  function adminDeleteRegistry() {
+
+  function adminDeleteRegistry() public {
     if (msg.sender == _registryAdmin) {
-      suicide(_registryAdmin); // this is a predefined function, it deletes the contract and returns all funds to the admin's address
+      selfdestruct(_registryAdmin); // this is a predefined function, it deletes the contract and returns all funds to the admin's address
     }
   }
 

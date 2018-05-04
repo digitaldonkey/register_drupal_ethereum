@@ -1,9 +1,9 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 
 contract RegisterDrupal {
 
   // Mapping that matches Drupal generated hash with Ethereum Account address.
-  mapping (bytes32 => address) _accounts;
+  mapping (bytes16 => address) _accounts;
 
   address _registryAdmin;
 
@@ -14,14 +14,14 @@ contract RegisterDrupal {
   bool _registrationDisabled;
 
   // Event allowing listening to newly signed Accounts (?)
-  event AccountCreatedEvent (address indexed from, bytes32 indexed hash, int error);
+  event AccountCreatedEvent (address indexed from, bytes16 indexed hash, int error);
 
-  function accountCreated(address from, bytes32 hash, int error) public {
-    AccountCreatedEvent(from, hash, error);
+  function accountCreated(address from, bytes16 hash, int error) public {
+    emit AccountCreatedEvent(from, hash, error);
   }
 
   // Register Account
-  function newUser(bytes32 drupalUserHash) public {
+  function newUser(bytes16 drupalUserHash) public {
 
     if (_accounts[drupalUserHash] == msg.sender) {
       // Hash allready registered to address.
@@ -46,7 +46,7 @@ contract RegisterDrupal {
   }
 
   // Validate Account
-  function validateUserByHash (bytes32 drupalUserHash) public constant returns (address result) {
+  function validateUserByHash (bytes16 drupalUserHash) public constant returns (address result) {
       return _accounts[drupalUserHash];
   }
 
@@ -55,7 +55,7 @@ contract RegisterDrupal {
   }
 
   // Administrative below
-  function RegisterDrupal() public {
+  constructor() public {
     _registryAdmin = msg.sender;
     _accountAdmin = msg.sender; // can be changed later
     _registrationDisabled = false;
@@ -78,7 +78,7 @@ contract RegisterDrupal {
 
   function adminRetrieveDonations() public {
     if (msg.sender == _registryAdmin) {
-      _registryAdmin.transfer(this.balance);
+      _registryAdmin.transfer(address(this).balance);
     }
   }
 

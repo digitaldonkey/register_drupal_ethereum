@@ -140,7 +140,8 @@ function registerAccount() {
   .then(function(tx){
     setStatus('Registered Account address: <br/>' +  account + '<br/>With hash:<br/>' + theHash, true)
   }).catch(function(e) {
-    setStatus("Error getting balance; see log.");
+    setStatus("Error @registerAccount. See console");
+    console.log(e);
   });
 };
 window.registerAccount = registerAccount;
@@ -170,8 +171,8 @@ function validateAccount(hash) {
     }
 
   }).catch(function(e) {
+    setStatus("ERROR see console.");
     console.log(e);
-    setStatus("Error getting balance; see log.");
   });
 };
 window.validateAccount = validateAccount;

@@ -97,6 +97,10 @@ Saving successful migration to network...
 Saving artifacts...
 ``` 
 
+Note:
+* If your get an Error `Error: Attempting to run transaction which calls a contract function, but recipient address 0x8cdaf0cd259887258bc13a92c0a6da92698644c0 is not a contract address` you might need to delete `build/contracts/*.json`
+* After restarting the development network you might get a nounce related error. Metamask tracks the TX on your account, if you reset the network you also need to reset the account in Metamask (settings Reset account).
+
 Now keep the truffle console open (it's your local blockchain) and start the app 
 
 ```

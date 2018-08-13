@@ -1,110 +1,109 @@
-var contract = require('truffle-contract');
-var Web3 = require('web3');
+/* eslint-env browser */
 
-var accounts;
-var account;
-var accountCreatedEvent;
-var registerDrupalDeployed;
+const contract = require('truffle-contract')
+const Web3 = require('web3')
+
+let account, accountCreatedFilter, registerDrupalDeployed, allEvents
 
 // Import our contract artifacts and turn them into usable abstractions.
-import registerDrupalArtifacts from '../../build/contracts/RegisterDrupal.json';
+import registerDrupalArtifacts from '../../build/contracts/RegisterDrupal.json'
 
 /**
  * Init web3
 */
-window.addEventListener('load', function() {
-
+window.addEventListener('load', () => {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
-    console.log('Found injected web3');
-    web3 = new Web3(web3.currentProvider);
+    console.log('Found injected web3')
+    web3 = new Web3(web3.currentProvider)
   }
   else {
-    console.log('Could not find injected web3. You should consider trying MetaMask!');
-    setStatus('Could not find injected web3. You should consider trying MetaMask!');
-    // var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    console.log('Could not find injected web3. You should consider trying MetaMask!')
+    setStatus('Could not find injected web3. You should consider trying MetaMask!')
+    // const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
-  startApp();
-});
 
+  startApp()
+})
 
 /**
  * Main App.
  */
 function startApp() {
-  console.log('startApp()');
+  const address = document.getElementById('contract-address')
+  const RegisterDrupal = contract(registerDrupalArtifacts)
 
-  var address = document.getElementById("contract-address");
-  var RegisterDrupal = contract(registerDrupalArtifacts);
+  console.log('startApp()')
 
-  RegisterDrupal.setProvider(web3.currentProvider);
+  RegisterDrupal.setProvider(web3.currentProvider)
 
-  web3.eth.getAccounts(function(err, accs) {
-
+  web3.eth.getAccounts((err, accounts) => {
     // Account validation.
     if (err != null) {
-      alert("There was an error fetching your accounts.");
-      return;
+      alert('There was an error fetching your accounts.')
+      return
     }
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
+    if (accounts && accounts.length === 0) {
+      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.")
+      return
     }
-    accounts = accs;
-    account = accounts[0];
+    account = accounts[0]
 
     // The RegisterDrupal Smart Contract.
-    RegisterDrupal.deployed().then(function(instance) {
-      registerDrupalDeployed = instance;
-      address.innerHTML = registerDrupalDeployed.address;
+    RegisterDrupal.deployed().then((instance) => {
+      registerDrupalDeployed = instance
+      address.innerHTML = registerDrupalDeployed.address
 
       // Event listener for account creation.
-      return registerDrupalDeployed.AccountCreatedEvent();
+      return registerDrupalDeployed
+    }).then((contract) => {
 
-    }).then(function(result) {
-
-        accountCreatedEvent = result;
-
-
-
-        accountCreatedEvent.watch(function(error, result){
-          console.log(result, 'accountCreatedEvent triggered.');
-          // result will contain various information
-          // including the argumets given to the Deposit
-          // call.
-          if (!error) {
-            console.log(result);
-          }
-          else {
-            console.log(error);
-          }
-        });
-      });
-    generateHash();
-  });
+      accountCreatedFilter = contract.AccountCreated().watch((error, result) => {
+        // console.log('AccountCreated', [error, result])
+        if (!error) {
+          setStatus(
+              `<strong>emited event AccountCreated</strong> <em>"Created account successfully"</em> <br /> 
+               TX hash: <small>${result.transactionHash} </small><br /> 
+               Account: <small>${result.args.from} </small><br />
+               Hash: <small>${result.args.hash} </small><br />
+              `, true
+          )
+          console.log('AccountCreated', result.args)
+        }
+        else {
+          setStatus('ERROR see console', false)
+          console.log(error)
+        }
+      })
+    })
+    generateHash()
+  })
 }
-
 
 /* HELPER to update DOM */
 function setStatus(message, success) {
-  var status = document.getElementById("status");
-    if (success) {
-      status.className = 'success';
-    }
-    else {
-      status.className = 'error';
-    }
-  status.innerHTML = message;
-};
+  const status = document.getElementById('status')
+  let thisMessage = document.createElement('div')
+  thisMessage.innerHTML = `<span class="time">${new Date().toLocaleTimeString() }</span> ${message}`
 
+  if (success) {
+    thisMessage.className = 'success'
+  }
+  else {
+    thisMessage.className = 'error'
+  }
+  status.insertBefore(thisMessage, status.firstChild)
+}
 
 /* Generating an "Drupal hash" */
 function _makeid() {
-    var text = "";
-    var possible = "ABCDEF0123456789";
-    for( var i=0; i < 32; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
+  let text = ''
+  let i
+  const possible = 'abcdef0123456789'
+  for (i = 0; i < 64; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+  return text
 }
 
 /**
@@ -116,13 +115,12 @@ function _makeid() {
  *
  */
 function generateHash() {
-  var hashInput = document.getElementById("hash");
-  var theHash = _makeid();
-  setStatus('Generated new Hash: ' +  theHash, true)
-  hashInput.value = theHash;
-
-};
-window.generateHash = generateHash;
+  const hashInput = document.getElementById('hash')
+  const theHash = _makeid()
+  setStatus(`<strong>Created new hash</strong> <br />Hash: <small>0x${theHash}</small>`, true)
+  hashInput.value = theHash
+}
+window.generateHash = generateHash
 
 /**
  * registerAccount
@@ -132,20 +130,28 @@ window.generateHash = generateHash;
  */
 function registerAccount() {
   // HASH - will be provided by the WebApp to register to. E.g: Drupal.
-  var theHash = document.getElementById("hash").value;
+  const theHash = document.getElementById('hash').value
 
-  registerDrupalDeployed.newUser(theHash, {from: account}).then(function(tx) {
-    return tx;
+  registerDrupalDeployed.newUser(theHash, { from: account }).then(function (tx) {
+    return tx
   })
-  .then(function(tx){
-    setStatus('Registered Account address: <br/>' +  account + '<br/>With hash:<br/>' + theHash, true)
-  }).catch(function(e) {
-    setStatus("Error @registerAccount. See console");
-    console.log(e);
-  });
-};
-window.registerAccount = registerAccount;
+  .then((tx) => {
+    setStatus(
+        `<strong>Transaction</strong> <em>"Registered Account address"<em/><br/>
+         TX hash: <small>${tx.tx}</small> 
+        `, true)
+  }).catch(function (e) {
 
+    if (e.message.search(/user denied/i)) {
+      setStatus('User denied signature.')
+    }
+    else {
+      setStatus('Error @registerAccount. See console')
+    }
+    console.log(e)
+  })
+}
+window.registerAccount = registerAccount
 
 /**
  * validateAccount
@@ -154,26 +160,27 @@ window.registerAccount = registerAccount;
  * This is a constant function, so no signature required here.
  */
 function validateAccount(hash) {
-    if (typeof hash === 'undefined') {
-      hash = document.getElementById("hash").value;
-    }
-    console.log(hash, 'hash @ validateAccount');
+  if (typeof hash === 'undefined') {
+    hash = document.getElementById('hash').value
+  }
+  console.log(hash, 'hash@validateAccount')
 
-  registerDrupalDeployed.validateUserByHash(hash, {from: account})
-  .then(function(address) {
-    // On a sucessful cal success must be 0.
-    console.log(address , 'address@validateUserByHash');
+  registerDrupalDeployed.validateUserByHash(hash, { from: account })
+  .then(function (address) {
+    // On a successful cal success must be 0.
+    console.log(address, 'address@validateUserByHash')
     if (account === address) {
-      setStatus('The address submitted with the hash  "' + hash +'" is "' + address + '"', true);
+      setStatus(`<strong>Validated </strong> <em><small>0x${hash}</small></em> <br />
+                 Submitting account <small>${address}</small>`, true)
     }
     else {
-      setStatus('No adress found for hash.', false);
+      setStatus(`<strong>Validated </strong> <em><small>0x${hash}</small></em> <br />
+                No address found for hash.`, false)
     }
-
-  }).catch(function(e) {
-    setStatus("ERROR see console.");
-    console.log(e);
-  });
-};
-window.validateAccount = validateAccount;
+  }).catch(function (e) {
+    setStatus('ERROR see console.')
+    console.log(e)
+  })
+}
+window.validateAccount = validateAccount
 

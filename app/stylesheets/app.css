@@ -50,6 +50,19 @@ h3 {
   color: green;
 }
 
+#status > div {
+  padding: .25em 0;
+  border-bottom: 1px dashed  black;
+}
+#status > div:last-child {
+  border-bottom: 0
+}
+#status .time {
+  font-size: small;
+  color: lightgrey;
+}
+
+
 #balance {
   color: black;
 }
